@@ -10,8 +10,19 @@ from uuid import uuid4
 from urlparse import urlparse, parse_qs
 from uuid import uuid4
 
+
 logger = logging.getLogger(__name__)
 LOG_HEADER = "[CRAWLER]"
+
+URLDict = defaultdict(int)
+numberOfSitesVisited = 0
+outLinksDict = defaultdict(int)
+subdomainDict = defaultdict(int)
+
+
+'''
+Subdomain Parse code found from: https://docs.python.org/2/library/urlparse.html
+'''
 
 @Producer(Biancat1Achiang5Link)
 @GetterSetter(OneBiancat1Achiang5UnProcessedLink)
@@ -82,10 +93,33 @@ def is_valid(url):
     Robot rules and duplication rules are checked separately.
     This is a great place to filter out crawler traps.
     '''
+
+    global numberOfSitesVisited = 0
+    numberofSitesVisited++
+    
     parsed = urlparse(url)
     if parsed.scheme not in set(["http", "https"]):
         return False
+
+    for char in url:
+        if char == "?":
+            return false;
+
+    
+    parsedURL = urlparse(url)
+    subdomain = parsedURL.hostname.split('.')[0]
+    if subdomain != "":
+        subdomainDict[subdomain] += 1
+
+    #adds url to dictionary and increments it's count
+    URLDict[url]+=1
+
+    #if we've visited the same website over 10 times stop
+    if URLDict[url] >= 10:
+        return False;
+
     try:
+
         return ".ics.uci.edu" in parsed.hostname \
             and not re.match(".*\.(css|js|bmp|gif|jpe?g|ico" + "|png|tiff?|mid|mp2|mp3|mp4"\
             + "|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf" \
