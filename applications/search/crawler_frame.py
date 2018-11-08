@@ -9,6 +9,8 @@ from uuid import uuid4
 
 from urlparse import urlparse, parse_qs
 from uuid import uuid4
+import datetime
+from collections import defaultdict
 
 
 logger = logging.getLogger(__name__)
@@ -99,8 +101,7 @@ def is_valid(url):
     This is a great place to filter out crawler traps.
     '''
 
-    global numberOfSitesVisited
-    numberofSitesVisited+=1
+
     
     parsed = urlparse(url)
     if parsed.scheme not in set(["http", "https"]):
@@ -123,6 +124,39 @@ def is_valid(url):
     if URLDict[url] >= 10:
         return False;
 
+    global numberOfSitesVisited
+    numberofSitesVisited+=1
+    
+    if numberOfSitesVisited == 3000:
+
+        currentDay = datetime.now()
+
+        subdomainFile = open('subdomains_' + str(currentDay.month) + '-' \
+                              + str(currentDay.day) + '-' + str(currentDay.year) + 'TIME' + str(date.hour) + '-' + str(date.minute) + '-' \
+                              + str(date.second) + '.txt', 'w+')
+
+        subdomainFile.write('Subdomains and Counts:')
+        for subdomain, subdomainCount in sorted(subdomainDict.items(), key = lambda x: x[1], reverse = True):
+            if value == -1:
+                pass
+            else:
+                subdomainFile.write(str(subdomain) + ' num: ' + str(subdomainCount) + '\n')
+
+        outLinksFile = open('outLinks_' + str(date.year) + '-' + str(date.month) + '-' \
+                                    + str(date.day) + 'TIME' + str(date.hour) + '-' + str(date.minute) + '-' \
+                                    + str(date.second) + '.txt', 'w+')
+        
+        outLinksFile.write('Domains and links going out:')
+        for domain, numOutLinks in sorted(outLinksDict.items(), key = lambda x: x[1], reverse = True):
+            createHighestLinkFile.write(str(domain) + ' Outlinks: ' + str(numOutLinks) + '\n')
+
+
+        subdomainFile.close()
+        outgoingLinksFile.close()
+
+        print("Done parsing 3000 links! Check folder for results")
+    
+    
     try:
 
         return ".ics.uci.edu" in parsed.hostname \
