@@ -85,10 +85,12 @@ def extract_next_links(rawDataObj):
         pageHTMLDoc.make_links_absolute(rawDataObj.url)
         for element, attribute, link, pos in pageHTMLdoc.iterlinks():
             if element == "a" and attribute == "href":
-                outputLinks.append(link)
-                outgoing += 1
+                if "?" not in url and "#"  not in url:
+                    outputLinks.append(link)
+                    outgoing += 1
         #associate each url (rawDataObj.url) with the number of outgoing links on that page
-        outlinksDict[rawDataObj.url] += 1
+        if "?" not in url and "#"  not in url:
+            outlinksDict[rawDataObj.url] += 1
         return outputLinks
     except:
         print("Error met with rawDataObj content: ", rawDataObj.content)
@@ -100,17 +102,13 @@ def is_valid(url):
     Robot rules and duplication rules are checked separately.
     This is a great place to filter out crawler traps.
     '''
-
-
     
     parsed = urlparse(url)
     if parsed.scheme not in set(["http", "https"]):
         return False
 
-    for char in url:
-        if char == "?":
-            return false;
-
+    if "?" in url or "#" in url:
+        return False;
     
     parsedURL = urlparse(url)
     subdomain = parsedURL.hostname.split('.')[0]
@@ -125,7 +123,8 @@ def is_valid(url):
         return False;
 
     global numberOfSitesVisited
-    numberofSitesVisited+=1
+    
+    numberOfSitesVisited+=1
     
     if numberOfSitesVisited == 3000:
 
