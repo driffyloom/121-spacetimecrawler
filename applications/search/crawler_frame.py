@@ -65,11 +65,15 @@ def extract_next_links(rawDataObj):
     
     Suggested library: lxml
     '''
-    pageTree = etree.parse(rawDataObj.content)
-    for link in pageTree.getiterator('a'):
-        newLink = link.get('href')
-        outputLinks.append(newlink)
-    return outputLinks
+    try:
+        pageHTMLDoc = lxml.html.fromstring(rawDataObj.content) #nice and correct HTML document
+        pageHTMLDoc.make_links_absolute(rawDataObj.url)
+        for element, attribute, link, pos in pageHTMLdoc.iterlinks():
+            if element == "a" and attribute == "href":
+                outputLinks.append(link)
+        return outputLinks
+    except:
+        print("Error met with rawDataObj content: ", rawDataObj.content)
 
 def is_valid(url):
     '''
