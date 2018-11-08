@@ -81,17 +81,17 @@ def extract_next_links(rawDataObj):
     '''
     try:
         outgoing = 0
-        pageHTMLDoc = lxml.html.fromstring(rawDataObj.content) #nice and correct HTML document
-        pageHTMLDoc.make_links_absolute(rawDataObj.url)
-        for element, attribute, link, pos in pageHTMLdoc.iterlinks():
-            if element == "a" and attribute == "href":
-                outputLinks.append(link)
-                outgoing += 1
+        allLinks = re.findall('href=\".\S+\"', rawDataObj.content)
+        for link in allLinks:
+            outgoing += 1
+            link = re.sub('href=\"', '', link)
+            link = link.rstrip('"')
+            outputLinks.append(link)
         #associate each url (rawDataObj.url) with the number of outgoing links on that page
         outlinksDict[rawDataObj.url] += 1
         return outputLinks
     except:
-        print("Error met with rawDataObj content: ", rawDataObj.content)
+        print("Error when fetching outlinks from: ", rawDataObj.url)
 
 def is_valid(url):
     '''
@@ -125,7 +125,7 @@ def is_valid(url):
         return False;
 
     global numberOfSitesVisited
-    numberofSitesVisited+=1
+    numberOfSitesVisited+=1
     
     if numberOfSitesVisited == 3000:
 
