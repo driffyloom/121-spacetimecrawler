@@ -13,6 +13,7 @@ from uuid import uuid4
 
 logger = logging.getLogger(__name__)
 LOG_HEADER = "[CRAWLER]"
+outlinksDict = defaultdict(int)
 
 URLDict = defaultdict(int)
 numberOfSitesVisited = 0
@@ -77,11 +78,15 @@ def extract_next_links(rawDataObj):
     Suggested library: lxml
     '''
     try:
+        outgoing = 0
         pageHTMLDoc = lxml.html.fromstring(rawDataObj.content) #nice and correct HTML document
         pageHTMLDoc.make_links_absolute(rawDataObj.url)
         for element, attribute, link, pos in pageHTMLdoc.iterlinks():
             if element == "a" and attribute == "href":
                 outputLinks.append(link)
+                outgoing += 1
+        #associate each url (rawDataObj.url) with the number of outgoing links on that page
+        outlinksDict[rawDataObj.url] += 1
         return outputLinks
     except:
         print("Error met with rawDataObj content: ", rawDataObj.content)
