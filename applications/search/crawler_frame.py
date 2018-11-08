@@ -94,8 +94,8 @@ def is_valid(url):
     This is a great place to filter out crawler traps.
     '''
 
-    global numberOfSitesVisited = 0
-    numberofSitesVisited++
+    global numberOfSitesVisited
+    numberofSitesVisited+=1
     
     parsed = urlparse(url)
     if parsed.scheme not in set(["http", "https"]):
