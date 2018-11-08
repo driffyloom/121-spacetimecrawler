@@ -88,7 +88,8 @@ def extract_next_links(rawDataObj):
             link = link.rstrip('"')
             outputLinks.append(link)
         #associate each url (rawDataObj.url) with the number of outgoing links on that page
-        outlinksDict[rawDataObj.url] += 1
+        if "?" not in url and "#"  not in url:
+            outlinksDict[rawDataObj.url] += 1
         return outputLinks
     except:
         print("Error when fetching outlinks from: ", rawDataObj.url)
@@ -100,17 +101,13 @@ def is_valid(url):
     Robot rules and duplication rules are checked separately.
     This is a great place to filter out crawler traps.
     '''
-
-
     
     parsed = urlparse(url)
     if parsed.scheme not in set(["http", "https"]):
         return False
 
-    for char in url:
-        if char == "?":
-            return false;
-
+    if "?" in url or "#" in url:
+        return False;
     
     parsedURL = urlparse(url)
     subdomain = parsedURL.hostname.split('.')[0]
