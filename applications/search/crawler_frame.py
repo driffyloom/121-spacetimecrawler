@@ -7,7 +7,7 @@ import re, os
 from time import time
 from uuid import uuid4
 
-from urlparse import urlparse, parse_qs
+from urlparse import urlparse, parse_qs, urljoin
 from uuid import uuid4
 import datetime
 from collections import defaultdict
@@ -81,15 +81,21 @@ def extract_next_links(rawDataObj):
     '''
     try:
         outgoing = 0
-        allLinks = re.findall('href=\".\S+\"', rawDataObj.content)
+        allLinks = re.findall('a href=\".\S+\"', rawDataObj.content)
+        #print('Found links: ', allLinks) #debugging
         for link in allLinks:
+            #print('link: ', link) #debugging
             outgoing += 1
-            link = re.sub('href=\"', '', link)
+            link = re.sub('a href=\"', '', link)
             link = link.rstrip('"')
+            #make sure link is absolute 
+            if not link.startswith('http'):
+                link = urljoin(rawDataObj.url, link)
+                #print('Absolute link: ', link) #debugging
             outputLinks.append(link)
-        #associate each url (rawDataObj.url) with the number of outgoing links on that page
-        if "?" not in url and "#"  not in url:
-            outlinksDict[rawDataObj.url] += 1
+        #keep track of # of outlinks for each url
+        outlinksDict[rawDataObj.url] = outgoing
+        #print('output: ', outputLinks) #debugging
         return outputLinks
     except:
         print("Error when fetching outlinks from: ", rawDataObj.url)
