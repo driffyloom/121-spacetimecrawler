@@ -140,7 +140,7 @@ def is_valid(url):
 
         subdomainFile.write('Subdomains and Counts:')
         for subdomain, subdomainCount in sorted(subdomainDict.items(), key = lambda x: x[1], reverse = True):
-            if subdomainCount == -1:
+            if value == -1:
                 pass
             else:
                 subdomainFile.write(str(subdomain) + ' num: ' + str(subdomainCount) + '\n')
@@ -155,7 +155,7 @@ def is_valid(url):
 
 
         subdomainFile.close()
-        outgoingLinksFile.close()
+        outLinksFile.close()
 
         print("Done parsing 3000 links! Check folder for results")
     
