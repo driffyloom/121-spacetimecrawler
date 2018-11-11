@@ -7,7 +7,7 @@ import re, os
 from time import time
 from uuid import uuid4
 
-from urlparse import urlparse, parse_qs, urljoin
+from urlparse import urlparse, parse_qs
 from uuid import uuid4
 from datetime import datetime
 from collections import defaultdict
@@ -81,24 +81,19 @@ def extract_next_links(rawDataObj):
     '''
     try:
         outgoing = 0
-        allLinks = re.findall('a href=\".\S+\"', rawDataObj.content)
-        #print('Found links: ', allLinks) #debugging
-        for link in allLinks:
-            #print('link: ', link) #debugging
-            outgoing += 1
-            link = re.sub('a href=\"', '', link)
-            link = link.rstrip('"')
-            #make sure link is absolute 
-            if not link.startswith('http'):
-                link = urljoin(rawDataObj.url, link)
-                #print('Absolute link: ', link) #debugging
-            outputLinks.append(link)
-        #keep track of # of outlinks for each url
-        outlinksDict[rawDataObj.url] = outgoing
-        #print('output: ', outputLinks) #debugging
+        pageHTMLDoc = lxml.html.fromstring(rawDataObj.content) #nice and correct HTML document
+        pageHTMLDoc.make_links_absolute(rawDataObj.url)
+        for element, attribute, link, pos in pageHTMLdoc.iterlinks():
+            if element == "a" and attribute == "href":
+                if "?" not in url and "#"  not in url:
+                    outputLinks.append(link)
+                    outgoing += 1
+        #associate each url (rawDataObj.url) with the number of outgoing links on that page
+        if "?" not in url and "#"  not in url:
+            outlinksDict[rawDataObj.url] += 1
         return outputLinks
     except:
-        print("Error when fetching outlinks from: ", rawDataObj.url)
+        print("Error met with rawDataObj content: ", rawDataObj.content)
 
 def is_valid(url):
     '''
@@ -128,6 +123,7 @@ def is_valid(url):
         return False;
 
     global numberOfSitesVisited
+    
     numberOfSitesVisited+=1
     
     if numberOfSitesVisited == 3000:
