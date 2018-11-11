@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from urlparse import urlparse, parse_qs, urljoin
 from uuid import uuid4
-import datetime
+from datetime import datetime
 from collections import defaultdict
 
 
@@ -136,7 +136,7 @@ def is_valid(url):
 
         subdomainFile = open('subdomains_' + str(currentDay.month) + '-' \
                               + str(currentDay.day) + '-' + str(currentDay.year) + 'TIME' + str(date.hour) + '-' + str(date.minute) + '-' \
-                              + str(date.second) + '.txt', 'w+')
+                              + str(currentDay.second) + '.txt', 'w+')
 
         subdomainFile.write('Subdomains and Counts:')
         for subdomain, subdomainCount in sorted(subdomainDict.items(), key = lambda x: x[1], reverse = True):
@@ -145,9 +145,9 @@ def is_valid(url):
             else:
                 subdomainFile.write(str(subdomain) + ' num: ' + str(subdomainCount) + '\n')
 
-        outLinksFile = open('outLinks_' + str(date.year) + '-' + str(date.month) + '-' \
-                                    + str(date.day) + 'TIME' + str(date.hour) + '-' + str(date.minute) + '-' \
-                                    + str(date.second) + '.txt', 'w+')
+        outLinksFile = open('outLinks_' + str(currentDay.year) + '-' + str(currentDay.month) + '-' \
+                                    + str(currentDay.day) + 'TIME' + str(currentDay.hour) + '-' + str(date.minute) + '-' \
+                                    + str(currentDay.second) + '.txt', 'w+')
         
         outLinksFile.write('Domains and links going out:')
         for domain, numOutLinks in sorted(outLinksDict.items(), key = lambda x: x[1], reverse = True):
