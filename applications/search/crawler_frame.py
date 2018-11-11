@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from urlparse import urlparse, parse_qs, urljoin
 from uuid import uuid4
-from datetime import datetime
+import datetime
 from collections import defaultdict
 
 
