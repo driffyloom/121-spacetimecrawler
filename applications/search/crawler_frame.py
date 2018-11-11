@@ -135,7 +135,7 @@ def is_valid(url):
         currentDay = datetime.now()
 
         subdomainFile = open('subdomains_' + str(currentDay.month) + '-' \
-                              + str(currentDay.day) + '-' + str(currentDay.year) + 'TIME' + str(date.hour) + '-' + str(date.minute) + '-' \
+                              + str(currentDay.day) + '-' + str(currentDay.year) + 'TIME' + str(currentDay.hour) + '-' + str(currentDay.minute) + '-' \
                               + str(currentDay.second) + '.txt', 'w+')
 
         subdomainFile.write('Subdomains and Counts:')
@@ -146,7 +146,7 @@ def is_valid(url):
                 subdomainFile.write(str(subdomain) + ' num: ' + str(subdomainCount) + '\n')
 
         outLinksFile = open('outLinks_' + str(currentDay.year) + '-' + str(currentDay.month) + '-' \
-                                    + str(currentDay.day) + 'TIME' + str(currentDay.hour) + '-' + str(date.minute) + '-' \
+                                    + str(currentDay.day) + 'TIME' + str(currentDay.hour) + '-' + str(currentDay.minute) + '-' \
                                     + str(currentDay.second) + '.txt', 'w+')
         
         outLinksFile.write('Domains and links going out:')
