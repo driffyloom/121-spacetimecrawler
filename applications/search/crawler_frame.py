@@ -127,6 +127,15 @@ def is_valid(url):
     if URLDict[url] >= 10:
         return False;
 
+    #if there are a bunch of repeated directories, it might be an unintentional crawler trap. Filter these out.
+    #Ex: https://www.ics.uci.edu/community/alumni/index.php/hall_of_fame/hall_of_fame/hall_of_fame/inductees.php
+    #(if you keep clicking "Hall of Fame", it just tacks on another "/hall_of_fame" to the url
+    partsDict = defaultdict(int)
+    for part in url.split('/'):
+        partsDict[part] += 1
+        if partsDict[part] >= 3:
+            return False;
+
     global numberOfSitesVisited
     numberOfSitesVisited+=1
     
