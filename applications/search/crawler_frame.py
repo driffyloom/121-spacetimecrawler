@@ -151,7 +151,7 @@ def is_valid(url):
         
         outLinksFile.write('Domains and links going out:')
         for domain, numOutLinks in sorted(outLinksDict.items(), key = lambda x: x[1], reverse = True):
-            createHighestLinkFile.write(str(domain) + ' Outlinks: ' + str(numOutLinks) + '\n')
+            outLinksFile.write(str(domain) + ' Outlinks: ' + str(numOutLinks) + '\n')
 
 
         subdomainFile.close()
