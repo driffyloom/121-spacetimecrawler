@@ -94,7 +94,7 @@ def extract_next_links(rawDataObj):
                 #print('Absolute link: ', link) #debugging
             outputLinks.append(link)
         #keep track of # of outlinks for each url
-        outlinksDict[rawDataObj.url] = outgoing
+        outLinksDict[rawDataObj.url] = outgoing
         #print('output: ', outputLinks) #debugging
         return outputLinks
     except:
@@ -127,6 +127,15 @@ def is_valid(url):
     if URLDict[url] >= 10:
         return False;
 
+    #if there are a bunch of repeated directories, it might be an unintentional crawler trap. Filter these out.
+    #Ex: https://www.ics.uci.edu/community/alumni/index.php/hall_of_fame/hall_of_fame/hall_of_fame/inductees.php
+    #(if you keep clicking "Hall of Fame", it just tacks on another "/hall_of_fame" to the url
+    partsDict = defaultdict(int)
+    for part in url.split('/'):
+        partsDict[part] += 1
+        if partsDict[part] >= 3:
+            return False;
+
     global numberOfSitesVisited
     numberOfSitesVisited+=1
     
@@ -140,7 +149,7 @@ def is_valid(url):
 
         subdomainFile.write('Subdomains and Counts:')
         for subdomain, subdomainCount in sorted(subdomainDict.items(), key = lambda x: x[1], reverse = True):
-            if value == -1:
+            if subdomainCount == -1:
                 pass
             else:
                 subdomainFile.write(str(subdomain) + ' num: ' + str(subdomainCount) + '\n')
