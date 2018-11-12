@@ -94,7 +94,7 @@ def extract_next_links(rawDataObj):
                 #print('Absolute link: ', link) #debugging
             outputLinks.append(link)
         #keep track of # of outlinks for each url
-        outlinksDict[rawDataObj.url] = outgoing
+        outLinksDict[rawDataObj.url] = outgoing
         #print('output: ', outputLinks) #debugging
         return outputLinks
     except:
